@@ -30,6 +30,7 @@ try:
     api = None
     
     def login():
+      global api
       api = Garmin(os.getenv("GARMIN_USERNAME"), os.getenv("GARMIN_PASSWORD"))
       api.login()
 
@@ -50,8 +51,8 @@ try:
           loop=False
 
     def pullOldData():
-      i=28
-      while i < 35:
+      i=350
+      while i < 400:
         if api is None:
             login()
         date = (today - datetime.timedelta(days=i)).isoformat()
@@ -64,8 +65,9 @@ try:
       with open(fileName, 'w') as f:
         json.dump(data, f)
 
-    pullNewData()
-    updateJSON()
+    # pullNewData()
+    # pullOldData()
+    # updateJSON()
 
 except (
         GarminConnectConnectionError,
