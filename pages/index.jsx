@@ -1,7 +1,6 @@
 import { PythonShell } from "python-shell";
 import { useState } from "react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
 
 export const getServerSideProps = async () => {
   await new Promise((resolve, reject) => {
@@ -62,27 +61,33 @@ const App = ({ garminData }) => {
     [...Array(6)].forEach((week) => {
       let weekIntensityMinutes = 0;
       let weekActiveCalories = 0;
+      let weekSteps = 0;
       [...Array(7)].forEach((day) => {
         weekIntensityMinutes += getIntensityMinutes(formatDate(date));
         weekActiveCalories +=
           garminData[formatDate(date)]?.activeKilocalories || 0;
+        weekSteps += garminData[formatDate(date)]?.totalSteps || 0;
         date.setDate(date.getDate() + 1);
       });
 
       weekData.push(
         <li
+          key={date}
           style={{
             flex: 1,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
-            marginTop: "15px",
+            justifyContent: "flex-end",
+            paddingBottom: "8px",
           }}
         >
           {weekIntensityMinutes ? (
             <>
-              <div>Intensity Minutes: {weekIntensityMinutes}</div>
-              <div>Active Calories: {weekActiveCalories}</div>
+              <div>
+                Intensity Minutes: {weekIntensityMinutes.toLocaleString()}
+              </div>
+              <div>Active Calories: {weekActiveCalories.toLocaleString()}</div>
+              <div>Steps: {weekSteps.toLocaleString()}</div>
             </>
           ) : null}
         </li>
@@ -92,7 +97,7 @@ const App = ({ garminData }) => {
     return (
       <ul
         style={{
-          paddingTop: "calc(44px + 1em + 22px)",
+          paddingTop: "calc(44px + 1em + 30px)",
           paddingLeft: "15px",
           paddingRight: "15px",
           margin: 0,
@@ -101,6 +106,7 @@ const App = ({ garminData }) => {
           flexDirection: "column",
           border: "1px solid #a0a096",
           borderLeftWidth: "0px",
+          borderRadius: "0 15px 15px 0",
         }}
       >
         {weekData}
@@ -117,9 +123,6 @@ const App = ({ garminData }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          fontFamily: "Arial, Helvetica, sans-serif",
-          fontSize: "0.75em",
-          lineHeight: "16px",
         }}
       >
         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -135,6 +138,7 @@ const App = ({ garminData }) => {
               const intensityMinutes = getIntensityMinutes(formatDate(date));
               const activeKilocalories =
                 garminData[formatDate(date)]?.activeKilocalories;
+              const totalSteps = garminData[formatDate(date)]?.totalSteps;
               return (
                 <div
                   style={{
@@ -144,16 +148,48 @@ const App = ({ garminData }) => {
                     flexDirection: "column",
                     justifyContent: "center",
                     textAlign: "left",
-                    paddingLeft: "25px",
+                    paddingTop: "5px",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
                   }}
                 >
                   {view === "month" && date <= new Date() && (
                     <>
                       {intensityMinutes !== null && (
-                        <div>IM: {intensityMinutes}</div>
+                        <div
+                          style={{
+                            backgroundColor:
+                              intensityMinutes >= 30 ? "lemonchiffon" : null,
+                            marginBottom: "2px",
+                            paddingLeft: "5px",
+                          }}
+                        >
+                          IM: {intensityMinutes.toLocaleString()}
+                        </div>
                       )}
                       {activeKilocalories !== null && (
-                        <div>AC: {activeKilocalories}</div>
+                        <div
+                          style={{
+                            backgroundColor:
+                              activeKilocalories >= 200 ? "peachpuff" : null,
+                            marginBottom: "2px",
+                            paddingLeft: "5px",
+                          }}
+                        >
+                          AC: {activeKilocalories.toLocaleString()}
+                        </div>
+                      )}
+                      {totalSteps !== null && (
+                        <div
+                          style={{
+                            backgroundColor:
+                              totalSteps >= 7000 ? "lightblue" : null,
+                            marginBottom: "2px",
+                            paddingLeft: "5px",
+                          }}
+                        >
+                          S: {totalSteps.toLocaleString()}
+                        </div>
                       )}
                     </>
                   )}
@@ -171,8 +207,85 @@ const App = ({ garminData }) => {
           height: 100%;
           width: 100%;
         }
+        html * {
+          font-family: "Helvetica Neue", nimbus-sans, Helvetica, Arial,
+            sans-serif;
+          font-size: 13px;
+          font-weight: 300;
+          line-height: 16px;
+        }
+        button {
+          margin: 0;
+          border: 0;
+          outline: none;
+          color: black;
+          background: none;
+        }
+
+        // modified from react-calendar/dist/Calendar.css
         .react-calendar {
-          width: 700px;
+          width: 750px;
+          max-width: 100%;
+          border: 1px solid #a0a096;
+          border-radius: 15px 0 0 15px;
+        }
+        .react-calendar,
+        .react-calendar *,
+        .react-calendar *:before,
+        .react-calendar *:after {
+          -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+        }
+        .react-calendar button:enabled:hover {
+          cursor: pointer;
+        }
+        .react-calendar__navigation {
+          display: flex;
+          height: 44px;
+          margin-bottom: 1em;
+        }
+        .react-calendar__navigation button {
+          min-width: 44px;
+        }
+        .react-calendar__navigation button:disabled {
+          background-color: #f0f0f0;
+        }
+        .react-calendar__navigation button:enabled:hover,
+        .react-calendar__navigation button:enabled:focus {
+          background-color: #e6e6e6;
+        }
+        .react-calendar__month-view__weekdays {
+          text-align: center;
+          text-transform: uppercase;
+        }
+        .react-calendar__month-view__weekdays__weekday {
+          padding: 0.5em;
+        }
+        .react-calendar__month-view__weekNumbers .react-calendar__tile {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .react-calendar__month-view__days__day--neighboringMonth {
+          color: #757575;
+        }
+        .react-calendar__year-view .react-calendar__tile,
+        .react-calendar__decade-view .react-calendar__tile,
+        .react-calendar__century-view .react-calendar__tile {
+          padding: 2em 0.5em;
+        }
+        .react-calendar__tile {
+          max-width: 100%;
+          padding: 5px;
+          text-align: center;
+        }
+        .react-calendar__tile:disabled {
+          background-color: #f0f0f0;
+        }
+        .react-calendar__tile:enabled:hover,
+        .react-calendar__tile:enabled:focus {
+          background-color: #e6e6e6;
         }
       `}</style>
     </>
