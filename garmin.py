@@ -5,9 +5,6 @@ import logging
 import datetime
 from dotenv import load_dotenv
 import json
-import sys    
-sys.stdout.reconfigure(encoding='utf-8')
-
 # https://github.com/cyberjunky/python-garminconnect
 from garminconnect import (
     Garmin,
@@ -25,7 +22,12 @@ load_dotenv()
 
 try:
     fileName = 'public/garminData.json'
-    data = json.load(open(fileName))
+    try:
+      data = json.load(open(fileName))
+    except FileNotFoundError as err:
+      print("File not found", fileName, err) 
+      data = {}
+
     today = datetime.date.today()
     api = None
     
@@ -67,7 +69,7 @@ try:
 
     # pullNewData()
     # pullOldData()
-    # updateJSON()
+    updateJSON()
 
 except (
         GarminConnectConnectionError,

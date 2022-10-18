@@ -1,29 +1,21 @@
-import { PythonShell } from "python-shell";
 import { useState } from "react";
 import Calendar from "react-calendar";
 
 export const getServerSideProps = async () => {
-  await new Promise((resolve, reject) => {
-    PythonShell.run("garmin.py", null, function (err, results) {
-      if (err) {
-        console.error("Error running garmin.py", err);
-        reject({ success: false, err });
-      }
+  try {
+    const res = await fetch("http://garmin-report.vercel.app/api/index");
+    const garminData = await res.json();
 
-      console.log("PythonShell results: %j", results);
-      resolve({ success: true, results });
-    });
-  });
-
-  const res = await fetch("http://localhost:3000/garminData.json");
-  const garminData = await res.json();
-
-  return {
-    props: { garminData },
-  };
+    return {
+      props: { garminData },
+    };
+  } catch (err) {
+    console.error("Error fetching garminData", err);
+  }
 };
 
 const App = ({ garminData }) => {
+  garminData = JSON.parse(garminData);
   const [value, setValue] = useState(new Date());
   const [view, setView] = useState("month");
   const [activeStartDate, setActiveStartDate] = useState(null);
@@ -155,7 +147,7 @@ const App = ({ garminData }) => {
                 >
                   {view === "month" && date <= new Date() && (
                     <>
-                      {intensityMinutes !== null && (
+                      {!!intensityMinutes && (
                         <div
                           style={{
                             backgroundColor:
@@ -167,7 +159,7 @@ const App = ({ garminData }) => {
                           IM: {intensityMinutes.toLocaleString()}
                         </div>
                       )}
-                      {activeKilocalories !== null && (
+                      {!!activeKilocalories && (
                         <div
                           style={{
                             backgroundColor:
@@ -179,7 +171,7 @@ const App = ({ garminData }) => {
                           AC: {activeKilocalories.toLocaleString()}
                         </div>
                       )}
-                      {totalSteps !== null && (
+                      {!!totalSteps && (
                         <div
                           style={{
                             backgroundColor:
