@@ -15,7 +15,6 @@ export const getServerSideProps = async () => {
 };
 
 const App = ({ garminData }) => {
-  garminData = JSON.parse(garminData);
   const [value, setValue] = useState(new Date());
   const [view, setView] = useState("month");
   const [activeStartDate, setActiveStartDate] = useState(null);

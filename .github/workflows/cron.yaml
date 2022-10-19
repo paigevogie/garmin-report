@@ -1,0 +1,10 @@
+name: hourly cron
+on:
+  schedule:
+    - cron: "5 * * * *"
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull most recent Garmin data
+        run: curl -X POST https://garmin-report.vercel.app/api/index
