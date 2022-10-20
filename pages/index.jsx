@@ -68,8 +68,10 @@ const App = ({ garminData }) => {
             flex: 1,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-end",
-            paddingBottom: "8px",
+            justifyContent: "space-between",
+            fontSize: "12px",
+            paddingBottom: "calc(10px + 8px)",
+            paddingTop: "calc(10px + 16px + 8px)",
           }}
         >
           {weekIntensityMinutes ? (
@@ -86,22 +88,41 @@ const App = ({ garminData }) => {
     });
 
     return (
-      <ul
+      <div
         style={{
-          paddingTop: "calc(44px + 1em + 30px)",
-          paddingLeft: "15px",
-          paddingRight: "15px",
-          margin: 0,
-          listStyle: "none",
           display: "flex",
           flexDirection: "column",
+          flex: 1,
           border: "1px solid #a0a096",
           borderLeftWidth: "0px",
           borderRadius: "0 15px 15px 0",
         }}
       >
-        {weekData}
-      </ul>
+        <div
+          style={{
+            marginTop: "calc(44px + 1em)",
+            padding: "7px",
+            textTransform: "uppercase",
+            fontSize: "14px",
+            textAlign: "center",
+          }}
+        >
+          Week Total
+        </div>
+        <ul
+          style={{
+            flex: 1,
+            padding: "0 20px",
+            margin: 0,
+            listStyle: "none",
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "70px",
+          }}
+        >
+          {weekData}
+        </ul>
+      </div>
     );
   };
 
@@ -130,58 +151,54 @@ const App = ({ garminData }) => {
               const activeKilocalories =
                 garminData[formatDate(date)]?.activeKilocalories;
               const totalSteps = garminData[formatDate(date)]?.totalSteps;
+              const shouldShowData =
+                view === "month" &&
+                date <= new Date() &&
+                (!!intensityMinutes || !!activeKilocalories || !!totalSteps);
               return (
                 <div
                   style={{
-                    height: "50px",
+                    minHeight: "70px",
                     width: "100%",
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
                     textAlign: "left",
-                    paddingTop: "5px",
-                    paddingLeft: "10px",
-                    paddingRight: "10px",
+                    padding: "8px 0px 8px 12px",
                   }}
                 >
-                  {view === "month" && date <= new Date() && (
+                  {shouldShowData && (
                     <>
-                      {!!intensityMinutes && (
-                        <div
-                          style={{
-                            backgroundColor:
-                              intensityMinutes >= 30 ? "lemonchiffon" : null,
-                            marginBottom: "2px",
-                            paddingLeft: "5px",
-                          }}
-                        >
-                          IM: {intensityMinutes.toLocaleString()}
-                        </div>
-                      )}
-                      {!!activeKilocalories && (
-                        <div
-                          style={{
-                            backgroundColor:
-                              activeKilocalories >= 200 ? "peachpuff" : null,
-                            marginBottom: "2px",
-                            paddingLeft: "5px",
-                          }}
-                        >
-                          AC: {activeKilocalories.toLocaleString()}
-                        </div>
-                      )}
-                      {!!totalSteps && (
-                        <div
-                          style={{
-                            backgroundColor:
-                              totalSteps >= 7000 ? "lightblue" : null,
-                            marginBottom: "2px",
-                            paddingLeft: "5px",
-                          }}
-                        >
-                          S: {totalSteps.toLocaleString()}
-                        </div>
-                      )}
+                      <div
+                        style={{
+                          // backgroundColor:
+                          //   intensityMinutes >= 30 ? "lemonchiffon" : null,
+                          paddingLeft: "5px",
+                          fontSize: "12px",
+                        }}
+                      >
+                        IM: {intensityMinutes.toLocaleString()}
+                      </div>
+                      <div
+                        style={{
+                          // backgroundColor:
+                          //   activeKilocalories >= 200 ? "peachpuff" : null,
+                          paddingLeft: "5px",
+                          fontSize: "12px",
+                        }}
+                      >
+                        AC: {activeKilocalories.toLocaleString()}
+                      </div>
+                      <div
+                        style={{
+                          // backgroundColor:
+                          //   totalSteps >= 7000 ? "lightblue" : null,
+                          paddingLeft: "5px",
+                          fontSize: "12px",
+                        }}
+                      >
+                        S: {totalSteps.toLocaleString()}
+                      </div>
                     </>
                   )}
                 </div>
@@ -201,7 +218,7 @@ const App = ({ garminData }) => {
         html * {
           font-family: "Helvetica Neue", nimbus-sans, Helvetica, Arial,
             sans-serif;
-          font-size: 13px;
+
           font-weight: 300;
           line-height: 16px;
         }
@@ -227,6 +244,7 @@ const App = ({ garminData }) => {
           -moz-box-sizing: border-box;
           -webkit-box-sizing: border-box;
           box-sizing: border-box;
+          font-size: 14px;
         }
         .react-calendar button:enabled:hover {
           cursor: pointer;
@@ -268,7 +286,7 @@ const App = ({ garminData }) => {
         }
         .react-calendar__tile {
           max-width: 100%;
-          padding: 5px;
+          padding: 10px;
           text-align: center;
         }
         .react-calendar__tile:disabled {
