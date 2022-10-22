@@ -3,7 +3,11 @@ import ReactCalendar from "react-calendar";
 
 export const getServerSideProps = async () => {
   try {
-    const res = await fetch("http://garmin-report.vercel.app/api/index");
+    const url =
+      process.env.NODE_ENV === "production"
+        ? "http://garmin-report.vercel.app/api/index"
+        : "http:localhost:8008";
+    const res = await fetch(url);
     const garminData = await res.json();
 
     return {

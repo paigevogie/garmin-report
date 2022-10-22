@@ -111,12 +111,3 @@ class Handler(BaseHTTPRequestHandler):
 
     data = GarminService().pullTodaysData()
     self.wfile.write(json.dumps(data).encode())
-
-# def run(server_class=HTTPServer, handler_class=Handler, port=8008):
-#   server_address = ('', port)
-#   httpd = server_class(server_address, handler_class)
-  
-#   logger.debug('Starting httpd on port %d...' % port)
-#   httpd.serve_forever()
-
-# run() 

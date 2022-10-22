@@ -9,7 +9,7 @@
     "react-dom": "^18.2.0"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "python3 local.py & next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
