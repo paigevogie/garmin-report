@@ -7,4 +7,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Pull most recent Garmin data
-        run: curl -X POST https://garmin-report.vercel.app/api/index
+        run: "curl -X POST https://garmin-report.vercel.app/api/index --header 'Authorization: Bearer ${{ secrets.API_KEY }}'"
