@@ -13,7 +13,6 @@ export const getServerSideProps = async () => {
         Authorization: `Bearer ${process.env.API_KEY}`,
       },
     });
-    console.log("HERE", res);
     const garminData = await res.json();
 
     return {
@@ -30,7 +29,16 @@ const getIntensityMinutes = (garminData, date) =>
       2 * garminData[date].vigorousIntensityMinutes
     : null;
 
-const formatDate = (date) => date.toISOString().split("T")[0];
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month =
+    date.getMonth() + 1 < 10
+      ? "0" + (date.getMonth() + 1)
+      : date.getMonth() + 1;
+  const day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+  return `${year}-${month}-${day}`;
+};
 
 const CalendarTile = ({ date, view, garminData }) => {
   const intensityMinutes = getIntensityMinutes(garminData, formatDate(date));
