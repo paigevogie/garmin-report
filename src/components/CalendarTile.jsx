@@ -4,7 +4,7 @@ const Data = ({ children }) => (
   <div
     style={{
       paddingLeft: "5px",
-      fontSize: "12px",
+      fontSize: "14px",
     }}
   >
     {children}

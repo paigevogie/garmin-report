@@ -42,7 +42,7 @@ const WeekData = ({ garminData, activeStartDate, view, value }) => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          fontSize: "12px",
+          fontSize: "14px",
           paddingBottom: "calc(10px + 8px)",
           paddingTop: "calc(10px + 16px + 8px)",
         }}
@@ -69,7 +69,7 @@ const WeekData = ({ garminData, activeStartDate, view, value }) => {
         borderLeftWidth: "0px",
       }}
     >
-      <div
+      <span
         style={{
           marginTop: "calc(44px + 1em)",
           padding: "7px",
@@ -79,7 +79,7 @@ const WeekData = ({ garminData, activeStartDate, view, value }) => {
         }}
       >
         Week Total
-      </div>
+      </span>
       <ul
         style={{
           flex: 1,
@@ -89,6 +89,7 @@ const WeekData = ({ garminData, activeStartDate, view, value }) => {
           display: "flex",
           flexDirection: "column",
           minHeight: "70px",
+          fontSize: "14px",
         }}
       >
         {weekData}
@@ -99,7 +100,7 @@ const WeekData = ({ garminData, activeStartDate, view, value }) => {
         }
         @media screen and (min-width: 1040px) {
           div {
-            display: block;
+            display: flex;
           }
         }
       `}</style>

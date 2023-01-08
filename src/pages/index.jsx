@@ -79,6 +79,9 @@ const App = ({ garminData }) => {
           color: black;
           background: none;
         }
+        abbr {
+          text-decoration: none;
+        }
 
         // modified from react-calendar/dist/Calendar.css
         .react-calendar {
@@ -110,6 +113,7 @@ const App = ({ garminData }) => {
         }
         .react-calendar__navigation button {
           min-width: 44px;
+          text-transform: uppercase;
         }
         .react-calendar__navigation button:disabled {
           background-color: #f0f0f0;
@@ -132,6 +136,9 @@ const App = ({ garminData }) => {
         }
         .react-calendar__month-view__days__day--neighboringMonth {
           color: #757575;
+        }
+        .react-calendar__year-view abbr {
+          text-transform: uppercase;
         }
         .react-calendar__year-view .react-calendar__tile,
         .react-calendar__decade-view .react-calendar__tile,

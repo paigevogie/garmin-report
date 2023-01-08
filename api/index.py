@@ -137,9 +137,16 @@ class Handler(BaseHTTPRequestHandler):
       self.send_header('Content-type', 'application/json')
       self.end_headers()
 
-      today = datetime.now(timezone('US/Central')).date().isoformat()
-      yesterday = (datetime.now(timezone('US/Central')).date() - timedelta(days=1)).isoformat()
-      data = GarminService().pullData([today, yesterday])
+      i=0
+      dates = []
+
+      # pulling data for last three days
+      while i < 3:
+        date = (datetime.now(timezone('US/Central')).date() - timedelta(days=i)).isoformat()
+        dates.append(date)
+        i+=1
+
+      data = GarminService().pullData(dates)
       self.wfile.write(dumps(data).encode())
     except Exception as err:
       logger.error('Error on do_POST: %s', err)
