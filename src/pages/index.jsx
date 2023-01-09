@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { createContext, useState } from "react";
 import ReactCalendar from "react-calendar";
 import WeekData from "../components/WeekData";
 import CalendarTile from "../components/CalendarTile";
+import { useMediaQuery } from "../utils/utils";
 
 export const getServerSideProps = async () => {
   try {
@@ -20,23 +21,42 @@ export const getServerSideProps = async () => {
   }
 };
 
+export const Context = createContext({});
+
 const App = ({ garminData }) => {
   const [value, setValue] = useState(new Date());
   const [view, setView] = useState("month");
   const [activeStartDate, setActiveStartDate] = useState(null);
+  const isMobile = useMediaQuery("screen and (max-width: 768px)");
+
+  // work around for ssr ¯\_(ツ)_/¯
+  if (isMobile === null) {
+    return;
+  }
 
   return (
-    <>
+    <Context.Provider value={{ isMobile }}>
       <main
         style={{
-          height: "100%",
-          width: "100%",
+          minHeight: "100%",
+          padding: "20px 10px",
           display: "flex",
-          justifyContent: "center",
+          justifyContent: isMobile ? "start" : "center",
           alignItems: "center",
+          overflowX: "scroll",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            border: "1px solid #a0a096",
+            borderRadius: "15px",
+            overflow: "hidden",
+            minWidth: view === "month" ? "600px" : "",
+            minHeight: "570px",
+            maxWidth: "1000px",
+          }}
+        >
           <ReactCalendar
             showFixedNumberOfWeeks
             onChange={setValue}
@@ -48,32 +68,33 @@ const App = ({ garminData }) => {
             tileContent={({ date, view }) => (
               <CalendarTile {...{ date, view, garminData }} />
             )}
+            next2Label={null}
+            prev2Label={null}
+            minDetail="year"
           />
-          <WeekData {...{ garminData, activeStartDate, view, value }} />
+          {view === "month" && (
+            <WeekData {...{ garminData, activeStartDate, value }} />
+          )}
         </div>
       </main>
-      {/* 
-        $breakpoint-mobile: 640px;
-        $breakpoint-tablet: 768px;
-        $breakpoint-desktop: 1024px;
-        $breakpoint-desktop-xl: 1280px;
-      */}
       <style global jsx>{`
         html,
         body,
         #__next {
           height: 100%;
           width: 100%;
+          margin: 0;
         }
         html * {
           font-family: "Helvetica Neue", nimbus-sans, Helvetica, Arial,
             sans-serif;
-
           font-weight: 300;
           line-height: 16px;
+          box-sizing: border-box;
         }
         button {
           margin: 0;
+          padding: 0;
           border: 0;
           outline: none;
           color: black;
@@ -84,27 +105,11 @@ const App = ({ garminData }) => {
         }
 
         // modified from react-calendar/dist/Calendar.css
-        .react-calendar {
-          width: 250px;
-          max-width: 100%;
-          border: 1px solid #a0a096;
-        }
-        @media screen and (min-width: 1040px) {
-          .react-calendar {
-            width: 750px;
-          }
-        }
         .react-calendar,
         .react-calendar *,
         .react-calendar *:before,
         .react-calendar *:after {
-          -moz-box-sizing: border-box;
-          -webkit-box-sizing: border-box;
-          box-sizing: border-box;
           font-size: 14px;
-        }
-        .react-calendar button:enabled:hover {
-          cursor: pointer;
         }
         .react-calendar__navigation {
           display: flex;
@@ -119,8 +124,9 @@ const App = ({ garminData }) => {
           background-color: #f0f0f0;
         }
         .react-calendar__navigation button:enabled:hover,
-        .react-calendar__navigation button:enabled:focus {
+        .react-calendar__navigation button:enabled:active {
           background-color: #e6e6e6;
+          cursor: pointer;
         }
         .react-calendar__month-view__weekdays {
           text-align: center;
@@ -137,33 +143,41 @@ const App = ({ garminData }) => {
         .react-calendar__month-view__days__day--neighboringMonth {
           color: #757575;
         }
+        .react-calendar__month-view__days__day--neighboringMonth:hover {
+          background-color: #e6e6e6;
+          cursor: pointer;
+        }
         .react-calendar__year-view abbr {
           text-transform: uppercase;
         }
-        .react-calendar__year-view .react-calendar__tile,
-        .react-calendar__decade-view .react-calendar__tile,
-        .react-calendar__century-view .react-calendar__tile {
-          padding: 2em 0.5em;
-        }
+        // calendar tile
         .react-calendar__tile {
           max-width: 100%;
-          padding: 10px;
+          display: flex;
+          flex-direction: column;
+        }
+        .react-calendar__tile abbr {
+          width: 100%;
           text-align: center;
+        }
+        @media screen and (min-width: 769px) {
+          .react-calendar__tile {
+            padding: 10px;
+          }
+        }
+        .react-calendar__year-view .react-calendar__tile {
+          padding: 1.5em 0.5em;
         }
         .react-calendar__tile:disabled {
           background-color: #f0f0f0;
         }
-        .react-calendar__tile:enabled:hover,
-        .react-calendar__tile:enabled:focus {
+        .react-calendar__year-view .react-calendar__tile:enabled:hover,
+        .react-calendar__year-view .react-calendar__tile:enabled:active {
           background-color: #e6e6e6;
-        }
-        // hide prev and next double arrow buttons
-        button.react-calendar__navigation__arrow.react-calendar__navigation__prev2-button,
-        button.react-calendar__navigation__arrow.react-calendar__navigation__next2-button {
-          display: none;
+          cursor: pointer;
         }
       `}</style>
-    </>
+    </Context.Provider>
   );
 };
 

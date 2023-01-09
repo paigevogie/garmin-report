@@ -1,11 +1,15 @@
+import { useContext } from "react";
+import { Context } from "../pages";
 import { getIntensityMinutes, formatDate } from "../utils/utils";
 
-const WeekData = ({ garminData, activeStartDate, view, value }) => {
-  if (view !== "month") {
-    return;
-  }
+const Label = ({ mobile, desktop, ...props }) => {
+  const { isMobile } = useContext(Context);
+  return <span {...props}>{isMobile ? mobile : desktop}</span>;
+};
 
+const WeekData = ({ garminData, activeStartDate, value }) => {
   let date;
+  const { isMobile } = useContext(Context);
 
   if (activeStartDate) {
     date = new Date(activeStartDate);
@@ -38,22 +42,28 @@ const WeekData = ({ garminData, activeStartDate, view, value }) => {
       <li
         key={date}
         style={{
-          flex: 1,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
+          flex: 1,
           fontSize: "14px",
-          paddingBottom: "calc(10px + 8px)",
-          paddingTop: "calc(10px + 16px + 8px)",
+          paddingBottom: isMobile ? "8px" : "calc(10px + 8px)",
+          paddingTop: isMobile ? "calc(16px + 8px)" : "calc(10px + 16px + 8px)",
         }}
       >
-        {weekIntensityMinutes ? (
+        {!!weekIntensityMinutes || !!weekActiveCalories || !!weekSteps ? (
           <>
-            <div>
-              Intensity Minutes: {weekIntensityMinutes.toLocaleString()}
+            <div style={{ whiteSpace: "nowrap" }}>
+              <Label mobile="IM" desktop="Intensity Minutes" />
+              {`: ${weekIntensityMinutes.toLocaleString()}`}
             </div>
-            <div>Active Calories: {weekActiveCalories.toLocaleString()}</div>
-            <div>Steps: {weekSteps.toLocaleString()}</div>
+            <div style={{ whiteSpace: "nowrap" }}>
+              <Label mobile="AC" desktop="Active Calories" />
+              {`: ${weekActiveCalories.toLocaleString()}`}
+            </div>
+            <div style={{ whiteSpace: "nowrap" }}>
+              <Label mobile="S" desktop="Steps" />
+              {`: ${weekSteps.toLocaleString()}`}
+            </div>
           </>
         ) : null}
       </li>
@@ -63,27 +73,27 @@ const WeekData = ({ garminData, activeStartDate, view, value }) => {
   return (
     <div
       style={{
+        display: "flex",
         flexDirection: "column",
-        flex: 1,
-        border: "1px solid #a0a096",
-        borderLeftWidth: "0px",
+        borderLeft: "1px solid #a0a096",
       }}
     >
-      <span
+      <Label
         style={{
           marginTop: "calc(44px + 1em)",
-          padding: "7px",
+          padding: isMobile ? "7px 0" : "7px",
           textTransform: "uppercase",
           fontSize: "14px",
           textAlign: "center",
         }}
-      >
-        Week Total
-      </span>
+        mobile="Total"
+        desktop="Week Total"
+      />
       <ul
         style={{
+          display: "flex",
           flex: 1,
-          padding: "0 20px",
+          padding: isMobile ? "0 10px" : "0 20px",
           margin: 0,
           listStyle: "none",
           display: "flex",
@@ -94,16 +104,6 @@ const WeekData = ({ garminData, activeStartDate, view, value }) => {
       >
         {weekData}
       </ul>
-      <style jsx>{`
-        div {
-          display: none;
-        }
-        @media screen and (min-width: 1040px) {
-          div {
-            display: flex;
-          }
-        }
-      `}</style>
     </div>
   );
 };
