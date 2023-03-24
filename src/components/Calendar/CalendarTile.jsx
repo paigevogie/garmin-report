@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { Context } from "../pages";
-import { getIntensityMinutes, formatDate } from "../utils/utils";
+import { Context } from "../../pages";
+import { getIntensityMinutes, formatDate } from "../../utils/utils";
 
 const Data = ({ children }) => (
   <div
@@ -26,26 +26,24 @@ const DayTile = ({ date, garminData }) => {
   const { isMobile } = useContext(Context);
 
   return (
-    <>
-      <div
-        style={{
-          minHeight: "64px",
-          width: "100%",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          textAlign: "left",
-          padding: isMobile ? "8px 0" : "8px 0px 8px 12px",
-        }}
-      >
-        {shouldShowData && (
-          <>
-            <Data>IM: {intensityMinutes.toLocaleString()}</Data>
-            <Data>AC: {activeKilocalories.toLocaleString()}</Data>
-            <Data>S: {totalSteps.toLocaleString()}</Data>
-          </>
-        )}
-      </div>
-    </>
+    <div
+      style={{
+        minHeight: "64px",
+        width: "100%",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        textAlign: "left",
+        padding: isMobile ? "8px 0" : "8px 0px 8px 12px",
+      }}
+    >
+      {shouldShowData && (
+        <>
+          <Data>IM: {intensityMinutes.toLocaleString()}</Data>
+          <Data>AC: {activeKilocalories.toLocaleString()}</Data>
+          <Data>S: {totalSteps.toLocaleString()}</Data>
+        </>
+      )}
+    </div>
   );
 };
 
@@ -68,24 +66,22 @@ const MonthTile = ({ date, garminData }) => {
     !!intensityMinutes || !!activeKilocalories || !!totalSteps;
 
   return (
-    <>
-      <div
-        style={{
-          minHeight: "64px",
-          width: "100%",
-          padding: "8px 4px",
-          textAlign: "left",
-        }}
-      >
-        {shouldShowData && (
-          <>
-            <Data>IM: {intensityMinutes.toLocaleString()}</Data>
-            <Data>AC: {activeKilocalories.toLocaleString()}</Data>
-            <Data>S: {totalSteps.toLocaleString()}</Data>
-          </>
-        )}
-      </div>
-    </>
+    <div
+      style={{
+        minHeight: "64px",
+        margin: "0 auto 0 auto",
+        padding: "8px 4px",
+        textAlign: "left",
+      }}
+    >
+      {shouldShowData && (
+        <>
+          <Data>IM: {intensityMinutes.toLocaleString()}</Data>
+          <Data>AC: {activeKilocalories.toLocaleString()}</Data>
+          <Data>S: {totalSteps.toLocaleString()}</Data>
+        </>
+      )}
+    </div>
   );
 };
 

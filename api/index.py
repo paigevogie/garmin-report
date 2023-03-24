@@ -51,7 +51,7 @@ class GarminService():
         aws_secret_access_key=getenv('S3_AWS_SECRET_ACCESS_KEY'),
       )
 
-  def _login(self):
+  def login(self):
     try:
       if self.api is None:
         self.api = Garmin(getenv('GARMIN_USERNAME'), getenv('GARMIN_PASSWORD'))
@@ -73,7 +73,7 @@ class GarminService():
 
   def pullData(self, dates):
     self.getS3Data()
-    self._login()
+    self.login()
 
     for date in dates:
       try:

@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { Context } from "../pages";
-import { getIntensityMinutes, formatDate } from "../utils/utils";
+import { Context } from "../../pages";
+import { getIntensityMinutes, formatDate } from "../../utils/utils";
 
 const Label = ({ mobile, desktop, ...props }) => {
   const { isMobile } = useContext(Context);
@@ -44,8 +44,6 @@ const WeekData = ({ garminData, activeStartDate, value }) => {
         style={{
           display: "flex",
           flexDirection: "column",
-          flex: 1,
-          fontSize: "14px",
           paddingBottom: isMobile ? "8px" : "calc(10px + 8px)",
           paddingTop: isMobile ? "calc(16px + 8px)" : "calc(10px + 16px + 8px)",
         }}
@@ -75,15 +73,14 @@ const WeekData = ({ garminData, activeStartDate, value }) => {
       style={{
         display: "flex",
         flexDirection: "column",
-        borderLeft: "1px solid #a0a096",
+        borderLeft: "1px dotted #a0a096",
+        marginTop: "50px",
       }}
     >
       <Label
         style={{
-          marginTop: "calc(44px + 1em)",
           padding: isMobile ? "7px 0" : "7px",
           textTransform: "uppercase",
-          fontSize: "14px",
           textAlign: "center",
         }}
         mobile="Total"
@@ -92,14 +89,12 @@ const WeekData = ({ garminData, activeStartDate, value }) => {
       <ul
         style={{
           display: "flex",
-          flex: 1,
           padding: isMobile ? "0 10px" : "0 20px",
           margin: 0,
           listStyle: "none",
           display: "flex",
           flexDirection: "column",
           minHeight: "70px",
-          fontSize: "14px",
         }}
       >
         {weekData}
