@@ -1,11 +1,25 @@
 import { useContext } from "react";
 import { Context } from "../../pages";
 import { getIntensityMinutes, formatDate } from "../../utils/utils";
+import Checkmark from "./Checkmark";
+import { GOALS } from "./constants";
 
 const Label = ({ mobile, desktop, ...props }) => {
   const { isMobile } = useContext(Context);
   return <span {...props}>{isMobile ? mobile : desktop}</span>;
 };
+
+const Data = ({ children }) => (
+  <div
+    style={{
+      whiteSpace: "nowrap",
+      display: "flex",
+      justifyContent: "space-between",
+    }}
+  >
+    {children}
+  </div>
+);
 
 const WeekData = ({ garminData, activeStartDate, value }) => {
   let date;
@@ -50,18 +64,31 @@ const WeekData = ({ garminData, activeStartDate, value }) => {
       >
         {!!weekIntensityMinutes || !!weekActiveCalories || !!weekSteps ? (
           <>
-            <div style={{ whiteSpace: "nowrap" }}>
-              <Label mobile="IM" desktop="Intensity Minutes" />
-              {`: ${weekIntensityMinutes.toLocaleString()}`}
-            </div>
-            <div style={{ whiteSpace: "nowrap" }}>
-              <Label mobile="AC" desktop="Active Calories" />
-              {`: ${weekActiveCalories.toLocaleString()}`}
-            </div>
-            <div style={{ whiteSpace: "nowrap" }}>
-              <Label mobile="S" desktop="Steps" />
-              {`: ${weekSteps.toLocaleString()}`}
-            </div>
+            <Data>
+              <span>
+                <Label mobile="IM" desktop="Intensity Minutes" />
+                {`: ${weekIntensityMinutes.toLocaleString()}`}
+              </span>
+              <Checkmark
+                checked={weekIntensityMinutes >= GOALS.WEEK.INTENSITY_MINUTES}
+              />
+            </Data>
+            <Data>
+              <span>
+                <Label mobile="AC" desktop="Active Calories" />
+                {`: ${weekActiveCalories.toLocaleString()}`}
+              </span>
+              <Checkmark
+                checked={weekActiveCalories >= GOALS.WEEK.ACTIVE_CALORIES}
+              />
+            </Data>
+            <Data>
+              <span>
+                <Label mobile="S" desktop="Steps" />
+                {`: ${weekSteps.toLocaleString()}`}
+              </span>
+              <Checkmark checked={weekSteps >= GOALS.WEEK.STEPS} />
+            </Data>
           </>
         ) : null}
       </li>

@@ -1,0 +1,13 @@
+export const GOALS = {
+  DAY: {
+    STEPS: 7000,
+    INTENSITY_MINUTES: 30,
+    ACTIVE_CALORIES: 300,
+  },
+
+  WEEK: {
+    STEPS: 49000,
+    INTENSITY_MINUTES: 150,
+    ACTIVE_CALORIES: 1500,
+  },
+};

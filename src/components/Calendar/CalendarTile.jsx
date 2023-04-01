@@ -1,10 +1,12 @@
-import { useContext } from "react";
-import { Context } from "../../pages";
 import { getIntensityMinutes, formatDate } from "../../utils/utils";
+import Checkmark from "./Checkmark";
+import { GOALS } from "./constants";
 
 const Data = ({ children }) => (
   <div
     style={{
+      display: "flex",
+      justifyContent: "space-between",
       paddingLeft: "10px",
       whiteSpace: "nowrap",
     }}
@@ -23,8 +25,6 @@ const DayTile = ({ date, garminData }) => {
     date <= new Date() &&
     (!!intensityMinutes || !!activeKilocalories || !!totalSteps);
 
-  const { isMobile } = useContext(Context);
-
   return (
     <div
       style={{
@@ -33,14 +33,27 @@ const DayTile = ({ date, garminData }) => {
         flexDirection: "column",
         justifyContent: "space-between",
         textAlign: "left",
-        padding: isMobile ? "8px 0" : "8px 0px 8px 12px",
+        padding: "8px 4px",
       }}
     >
       {shouldShowData && (
         <>
-          <Data>IM: {intensityMinutes.toLocaleString()}</Data>
-          <Data>AC: {activeKilocalories.toLocaleString()}</Data>
-          <Data>S: {totalSteps.toLocaleString()}</Data>
+          <Data>
+            <span>IM: {intensityMinutes.toLocaleString()}</span>
+            <Checkmark
+              checked={intensityMinutes >= GOALS.DAY.INTENSITY_MINUTES}
+            />
+          </Data>
+          <Data>
+            <span>AC: {activeKilocalories.toLocaleString()}</span>
+            <Checkmark
+              checked={activeKilocalories >= GOALS.DAY.ACTIVE_CALORIES}
+            />
+          </Data>
+          <Data>
+            <span>S: {totalSteps.toLocaleString()}</span>
+            <Checkmark checked={totalSteps >= GOALS.DAY.STEPS} />
+          </Data>
         </>
       )}
     </div>

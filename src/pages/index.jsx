@@ -99,7 +99,7 @@ const App = ({ garminData }) => {
         html * {
           font-family: "Helvetica Neue", nimbus-sans, Helvetica, Arial,
             sans-serif;
-          font-size: 14px;
+          font-size: ${isMobile ? "16px" : "14px"};
           font-weight: 300;
           line-height: 16px;
           box-sizing: border-box;

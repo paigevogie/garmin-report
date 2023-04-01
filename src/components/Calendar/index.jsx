@@ -54,7 +54,10 @@ const Calendar = ({ garminData }) => {
         .react-calendar *,
         .react-calendar *:before,
         .react-calendar *:after {
-          font-size: 14px;
+          font-size: ${isMobile ? "16px" : "14px"};
+        }
+        .react-calendar {
+          min-width: 700px;
         }
         // navigation
         .react-calendar__navigation {
@@ -77,7 +80,7 @@ const Calendar = ({ garminData }) => {
           border-radius: 0 15px 0 0;
         }
         .react-calendar__navigation button:enabled:hover {
-          background-color: ${!isMobile && "#e6e6e6"};
+          background-color: ${!isMobile && "#f4f4f4"};
           cursor: pointer;
         }
         .react-calendar__navigation button:enabled:active {
@@ -98,10 +101,10 @@ const Calendar = ({ garminData }) => {
           padding: 0.5em;
         }
         .react-calendar__month-view__days__day--neighboringMonth {
-          color: #757575;
+          color: #969696;
         }
         .react-calendar__month-view__days__day--neighboringMonth:hover {
-          background-color: ${!isMobile && "#e6e6e6"};
+          background-color: ${!isMobile && "#f4f4f4"};
           cursor: pointer;
         }
         .react-calendar__month-view__days__day--neighboringMonth:active {
@@ -134,7 +137,7 @@ const Calendar = ({ garminData }) => {
           padding: 1.5em 0.5em;
         }
         .react-calendar__year-view .react-calendar__tile:enabled:hover {
-          background-color: ${!isMobile && "#e6e6e6"};
+          background-color: ${!isMobile && "#f4f4f4"};
           cursor: pointer;
         }
         .react-calendar__year-view .react-calendar__tile:enabled:active {
