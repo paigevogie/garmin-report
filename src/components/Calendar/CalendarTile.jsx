@@ -1,4 +1,8 @@
-import { getIntensityMinutes, formatDate } from "../../utils/utils";
+import {
+  getIntensityMinutes,
+  formatDate,
+  formatWeight,
+} from "../../utils/utils";
 import Checkmark from "./Checkmark";
 import { GOALS } from "./constants";
 
@@ -21,6 +25,7 @@ const DayTile = ({ date, garminData }) => {
   const activeKilocalories =
     garminData[formatDate(date)]?.activeKilocalories || 0;
   const totalSteps = garminData[formatDate(date)]?.totalSteps || 0;
+  const weight = formatWeight(garminData[formatDate(date)]?.weight) || "";
   const shouldShowData =
     date <= new Date() &&
     (!!intensityMinutes || !!activeKilocalories || !!totalSteps);
@@ -30,8 +35,6 @@ const DayTile = ({ date, garminData }) => {
       style={{
         minHeight: "64px",
         width: "100%",
-        flexDirection: "column",
-        justifyContent: "space-between",
         textAlign: "left",
         padding: "8px 4px",
       }}
@@ -50,10 +53,15 @@ const DayTile = ({ date, garminData }) => {
               checked={activeKilocalories >= GOALS.DAY.ACTIVE_CALORIES}
             />
           </Data>
-          <Data>
+          {/* <Data>
             <span>S: {totalSteps.toLocaleString()}</span>
             <Checkmark checked={totalSteps >= GOALS.DAY.STEPS} />
-          </Data>
+          </Data> */}
+          {!!weight && (
+            <Data>
+              <span>W: {weight.toLocaleString()}</span>
+            </Data>
+          )}
         </>
       )}
     </div>
@@ -91,7 +99,7 @@ const MonthTile = ({ date, garminData }) => {
         <>
           <Data>IM: {intensityMinutes.toLocaleString()}</Data>
           <Data>AC: {activeKilocalories.toLocaleString()}</Data>
-          <Data>S: {totalSteps.toLocaleString()}</Data>
+          {/* <Data>S: {totalSteps.toLocaleString()}</Data> */}
         </>
       )}
     </div>

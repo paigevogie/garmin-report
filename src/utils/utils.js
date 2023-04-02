@@ -32,3 +32,6 @@ export const useMediaQuery = (query) => {
 
   return matches;
 };
+
+export const formatWeight = (weight) =>
+  weight !== null ? Math.round((weight / 453.592) * 10) / 10 + "lbs" : null;

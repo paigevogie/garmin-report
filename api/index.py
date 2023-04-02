@@ -42,6 +42,7 @@ class GarminService():
       filteredData[date]['vigorousIntensityMinutes'] = data[date]['vigorousIntensityMinutes']
       filteredData[date]['activeKilocalories'] = data[date]['activeKilocalories']
       filteredData[date]['totalSteps'] = data[date]['totalSteps']
+      filteredData[date]['weight'] = data[date]['weight']
     return filteredData
 
   def _createSession(self):

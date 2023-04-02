@@ -1,6 +1,10 @@
 import { useContext } from "react";
 import { Context } from "../../pages";
-import { getIntensityMinutes, formatDate } from "../../utils/utils";
+import {
+  getIntensityMinutes,
+  formatDate,
+  formatWeight,
+} from "../../utils/utils";
 import Checkmark from "./Checkmark";
 import { GOALS } from "./constants";
 
@@ -39,18 +43,29 @@ const WeekData = ({ garminData, activeStartDate, value }) => {
   }
 
   const weekData = [];
+  const weekAvgWeights = []; //TODO: do this a better way
 
-  [...Array(6)].forEach((week) => {
+  [...Array(6)].forEach((week, i) => {
     let weekIntensityMinutes = 0;
     let weekActiveCalories = 0;
     let weekSteps = 0;
+    let weekAvgWeight = 0;
+    let weighins = 0;
     [...Array(7)].forEach((day) => {
       weekIntensityMinutes += getIntensityMinutes(garminData, formatDate(date));
       weekActiveCalories +=
         garminData[formatDate(date)]?.activeKilocalories || 0;
       weekSteps += garminData[formatDate(date)]?.totalSteps || 0;
+      weekAvgWeight += garminData[formatDate(date)]?.weight || 0;
+      weighins += !!garminData[formatDate(date)]?.weight ? 1 : 0;
       date.setDate(date.getDate() + 1);
     });
+
+    weekAvgWeight = weekAvgWeight / (weighins || 1);
+    !!weekAvgWeight && weekAvgWeights.push(weekAvgWeight);
+    const prevWeekAvgWeight = weekAvgWeights[weekAvgWeights.length - 2];
+    const weekAvgWeightDiff =
+      weekAvgWeight - weekAvgWeights[weekAvgWeights.length - 2];
 
     weekData.push(
       <li
@@ -60,6 +75,7 @@ const WeekData = ({ garminData, activeStartDate, value }) => {
           flexDirection: "column",
           paddingBottom: isMobile ? "8px" : "calc(10px + 8px)",
           paddingTop: isMobile ? "calc(16px + 8px)" : "calc(10px + 16px + 8px)",
+          minHeight: "64px",
         }}
       >
         {!!weekIntensityMinutes || !!weekActiveCalories || !!weekSteps ? (
@@ -82,12 +98,26 @@ const WeekData = ({ garminData, activeStartDate, value }) => {
                 checked={weekActiveCalories >= GOALS.WEEK.ACTIVE_CALORIES}
               />
             </Data>
-            <Data>
+            {/* <Data>
               <span>
                 <Label mobile="S" desktop="Steps" />
                 {`: ${weekSteps.toLocaleString()}`}
               </span>
               <Checkmark checked={weekSteps >= GOALS.WEEK.STEPS} />
+            </Data> */}
+            <Data>
+              <span>
+                <Label mobile="W" desktop="Avg Weight" />
+                {`: ${
+                  !!weekAvgWeight ? `${formatWeight(weekAvgWeight)}` : "?"
+                }`}
+                {!!weekAvgWeight &&
+                  !!prevWeekAvgWeight &&
+                  ` (${
+                    (weekAvgWeightDiff > 0 ? "+" : "") +
+                    formatWeight(weekAvgWeightDiff)
+                  })`}
+              </span>
             </Data>
           </>
         ) : null}
@@ -115,7 +145,6 @@ const WeekData = ({ garminData, activeStartDate, value }) => {
       />
       <ul
         style={{
-          display: "flex",
           padding: isMobile ? "0 10px" : "0 20px",
           margin: 0,
           listStyle: "none",
