@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { Context } from "../../pages";
 import ReactCalendar from "react-calendar";
-import WeekData from "./WeekData";
+import WeekTotal from "./WeekTotal";
 import CalendarTile from "./CalendarTile";
 
 const Calendar = ({ garminData }) => {
@@ -44,7 +44,7 @@ const Calendar = ({ garminData }) => {
             minDetail="year"
           />
           {view === "month" && (
-            <WeekData {...{ garminData, activeStartDate, value }} />
+            <WeekTotal {...{ garminData, activeStartDate, value }} />
           )}
         </div>
       </div>

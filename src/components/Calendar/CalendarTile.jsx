@@ -2,7 +2,10 @@ import {
   getIntensityMinutes,
   formatDate,
   formatWeight,
-} from "../../utils/utils";
+  getMonthIntensityMinutes,
+  getMonthActiveCalories,
+  getMonthTotalSteps,
+} from "./utils";
 import Checkmark from "./Checkmark";
 import { GOALS } from "./constants";
 
@@ -20,12 +23,11 @@ const Data = ({ children }) => (
 );
 
 const DayTile = ({ date, garminData }) => {
-  const intensityMinutes =
-    getIntensityMinutes(garminData, formatDate(date)) || 0;
-  const activeKilocalories =
-    garminData[formatDate(date)]?.activeKilocalories || 0;
-  const totalSteps = garminData[formatDate(date)]?.totalSteps || 0;
-  const weight = formatWeight(garminData[formatDate(date)]?.weight) || "";
+  const formattedDate = formatDate(date);
+  const intensityMinutes = getIntensityMinutes(garminData, formattedDate) || 0;
+  const activeKilocalories = garminData[formattedDate]?.activeKilocalories || 0;
+  const totalSteps = garminData[formattedDate]?.totalSteps || 0;
+  const weight = formatWeight(garminData[formattedDate]?.weight) || "";
   const shouldShowData =
     date <= new Date() &&
     (!!intensityMinutes || !!activeKilocalories || !!totalSteps);
@@ -69,20 +71,9 @@ const DayTile = ({ date, garminData }) => {
 };
 
 const MonthTile = ({ date, garminData }) => {
-  let intensityMinutes = 0;
-  let activeKilocalories = 0;
-  let totalSteps = 0;
-  let dateCopy = new Date(date);
-
-  while (dateCopy.getMonth() === date.getMonth()) {
-    intensityMinutes += getIntensityMinutes(garminData, formatDate(dateCopy));
-    activeKilocalories +=
-      garminData[formatDate(dateCopy)]?.activeKilocalories || 0;
-    totalSteps += garminData[formatDate(dateCopy)]?.totalSteps || 0;
-
-    dateCopy.setDate(dateCopy.getDate() + 1);
-  }
-
+  const intensityMinutes = getMonthIntensityMinutes(garminData, date);
+  const activeKilocalories = getMonthActiveCalories(garminData, date);
+  const totalSteps = getMonthTotalSteps(garminData, date);
   const shouldShowData =
     !!intensityMinutes || !!activeKilocalories || !!totalSteps;
 
@@ -99,7 +90,7 @@ const MonthTile = ({ date, garminData }) => {
         <>
           <Data>IM: {intensityMinutes.toLocaleString()}</Data>
           <Data>AC: {activeKilocalories.toLocaleString()}</Data>
-          {/* <Data>S: {totalSteps.toLocaleString()}</Data> */}
+          <Data>S: {totalSteps.toLocaleString()}</Data>
         </>
       )}
     </div>

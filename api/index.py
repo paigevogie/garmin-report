@@ -38,6 +38,7 @@ class GarminService():
     filteredData = {}
     for date in data:
       filteredData[date] = {}
+      filteredData[date]['calendarDate'] = data[date]['calendarDate']
       filteredData[date]['moderateIntensityMinutes'] = data[date]['moderateIntensityMinutes']
       filteredData[date]['vigorousIntensityMinutes'] = data[date]['vigorousIntensityMinutes']
       filteredData[date]['activeKilocalories'] = data[date]['activeKilocalories']
