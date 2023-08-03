@@ -13,7 +13,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "server": "python3 local.py",
-    "pulldata": "eval $(grep '^API_KEY' .env) && curl -X POST https://garmin-report.vercel.app/api/index --header \"Authorization: Bearer ${API_KEY}\""
+    "local": "python3 local.py",
+    "pulldata": "eval $(grep '^API_KEY' .env) && eval $(grep '^API_URL' .env) && curl ${API_URL} --header \"Authorization: Bearer ${API_KEY}\""
   }
 }

@@ -8,6 +8,6 @@ export const GOALS = {
   WEEK: {
     STEPS: 49000,
     INTENSITY_MINUTES: 150,
-    ACTIVE_CALORIES: 1500,
+    ACTIVE_CALORIES: 2000,
   },
 };

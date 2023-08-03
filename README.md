@@ -22,5 +22,6 @@ S3_AWS_ACCESS_KEY_ID="..."
 S3_AWS_SECRET_ACCESS_KEY="..."
 S3_BUCKET_NAME="..."
 
+API_URL="..."
 API_KEY="..."
 ```

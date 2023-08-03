@@ -2,7 +2,9 @@ import logging
 from http.server import BaseHTTPRequestHandler
 from json import dumps
 from os import getenv
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
+from pytz import timezone
 from garminservice import GarminService
 
 logger = logging.getLogger(__name__)
@@ -33,8 +35,17 @@ class Handler(BaseHTTPRequestHandler):
       self.send_header('Content-type', 'application/json')
       self.end_headers()
 
-      data = GarminService().getS3Data()
+      i=0
+      dates = []
+
+      # pulling data for last three days
+      while i < 3:
+        date = (datetime.now(timezone('US/Central')).date() - timedelta(days=i)).isoformat()
+        dates.append(date)
+        i+=1
+
+      data = GarminService().pullData(dates)
       self.wfile.write(dumps(data).encode())
     except Exception as err:
-      logger.error('Error on do_GET: %s', err)
+      logger.error('Error on do_POST: %s', err)
       self.do_SERVER_ERROR()
