@@ -6,20 +6,21 @@ import Calendar from "../components/Calendar";
 import Chart from "../components/Chart";
 
 export const getServerSideProps = async () => {
-  try {
-    const res = await fetch(process.env.API_URL, {
-      headers: {
-        Authorization: `Bearer ${process.env.API_KEY}`,
-      },
-    });
-    const garminData = await res.json();
+  const res = await fetch(process.env.API_URL, {
+    headers: {
+      x_authorization: `Bearer ${process.env.API_KEY}`,
+    },
+  });
 
-    return {
-      props: { garminData },
-    };
-  } catch (err) {
-    console.error("Error fetching garminData", err);
+  if (res.status !== 200) {
+    throw new Error(`Response status ${res.status}: ${res.statusText}`);
   }
+
+  const garminData = await res.json();
+
+  return {
+    props: { garminData },
+  };
 };
 
 export const Context = createContext({});

@@ -27,7 +27,8 @@ class Handler(BaseHTTPRequestHandler):
 
   def do_GET(self):
     try:
-      if self.headers.get('Authorization') != 'Bearer ' + getenv('API_KEY'):
+      if self.headers.get('Authorization') != 'Bearer ' + getenv('CRON_SECRET'):
+        logger.debug('Unauthorized: Headers %s does not match Bearer %s', self.headers.get('Authorization'), getenv('CRON_SECRET'))
         self.do_UNAUTHORIZED()
         return
 

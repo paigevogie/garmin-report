@@ -25,7 +25,10 @@ class Handler(BaseHTTPRequestHandler):
 
   def do_GET(self):
     try:
-      if self.headers.get('Authorization') != 'Bearer ' + getenv('API_KEY'):
+        # Authorization header is getting stripped by Vercel so using x-authorization instead
+        # https://stackoverflow.com/questions/70996838/vercel-production-branch-is-stripping-authorization-header-on-post-to-serverless
+      if self.headers.get('x_authorization') != 'Bearer ' + getenv('API_KEY'):
+        logger.debug('Unauthorized: Headers %s does not match Bearer %s', self.headers.get('x_authorization'), getenv('API_KEY'))
         self.do_UNAUTHORIZED()
         return
 
