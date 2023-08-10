@@ -46,6 +46,11 @@ class Handler(BaseHTTPRequestHandler):
         i+=1
 
       data = GarminService().pullData(dates)
+
+      if data is None:
+        self.do_SERVER_ERROR()
+        return
+
       self.wfile.write(dumps(data).encode())
     except Exception as err:
       logger.error('Error on do_POST: %s', err)

@@ -51,18 +51,6 @@ class GarminService():
         aws_secret_access_key=getenv('S3_AWS_SECRET_ACCESS_KEY'),
       )
 
-  def login(self):
-    try:
-      if self.api is None:
-        self.api = Garmin(getenv('GARMIN_USERNAME'), getenv('GARMIN_PASSWORD'))
-      self.api.login()
-    except (
-      GarminConnectConnectionError,
-      GarminConnectAuthenticationError,
-      GarminConnectTooManyRequestsError,
-    ) as err:
-      logger.error('Error on garmin login: %s', err)
-
   def getS3Data(self):
     self._createSession()
     s3 = self.session.resource('s3')
@@ -72,8 +60,19 @@ class GarminService():
     return self.filterData(self.data)
 
   def pullData(self, dates):
+    try:
+      if self.api is None:
+        self.api = Garmin(getenv('GARMIN_USERNAME'), getenv('GARMIN_PASSWORD'))
+      self.api.login()
+    except (
+      GarminConnectConnectionError,
+      GarminConnectAuthenticationError,
+      GarminConnectTooManyRequestsError,
+    ) as err:
+      logger.error('Error logging into garmin with username %s and password %s: %s', getenv('GARMIN_USERNAME'), getenv('GARMIN_PASSWORD'), err)
+      return None
+
     self.getS3Data()
-    self.login()
 
     for date in dates:
       try:
@@ -84,6 +83,7 @@ class GarminService():
         GarminConnectTooManyRequestsError
       ) as err:
         logger.error('Error pulling todays data from garmin: %s', err)
+        return None
 
     self._createSession()
     s3 = self.session.resource('s3')
